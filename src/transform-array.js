@@ -1,9 +1,14 @@
 const CustomError = require("../extensions/custom-error");
 
 module.exports = function transform(arr) {
-  if(!arr) return new Error('error');
-  if (!Array.isArray(arr)) return new Error();
-  if (!arr.includes('--discard-prev') && !arr.includes('--discard-prev')) return arr;
+  if(!arr) throw new Error('error');
+  if (!Array.isArray(arr)) throw new Error('error');
+  if (
+  	!arr.includes('--discard-prev') && 
+ 	 	!arr.includes('--discard-next') && 
+  	!arr.includes('--double-prev') && 
+  	!arr.includes('--double-next')
+  ) return arr;
   let toChange = [...arr];
 
   toChange.forEach((item, i, array) => {
@@ -25,14 +30,14 @@ module.exports = function transform(arr) {
       return
     }
 	  if (item === '--discard-next') {
-      if (i === array.length) {
+      if (i === array.length - 1) {
     	  array.splice(i, 1);
     		return
  			}
       array.splice(i, 2)
     }
     if (item === '--double-next') {
-      if (i === array.length) {
+      if (i === array.length - 1) {
       	array.splice(i, 1)
       	return;
       }
@@ -40,5 +45,5 @@ module.exports = function transform(arr) {
       return
     } 
   })
-  console.log(toChange)
+  return toChange
 };
